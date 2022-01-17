@@ -30,9 +30,9 @@ pipeline {
         stage('Tools-Setup') {
             steps {
 		    echo "Tools Setup"
-                //sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
+                sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
                 //sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/sonarqube/sonar-install.yaml'
-                //sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/docker/docker-install.yml'   
+                sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/docker/docker-install.yml'   
                      
                 //K8s Setup
                 //sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
