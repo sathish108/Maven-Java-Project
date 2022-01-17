@@ -82,60 +82,10 @@ pipeline {
       stage('Build Docker Image') {
          
          steps{
-                  sh "docker build -t gvenkat/webapp1 ."  
+                  sh "docker build -t sathish108/webapp ."  
          }
      }
 	    
-     stage('Publish Docker Image') {
-         
-        steps{
-
-    	      withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
-    		    sh "docker login -u ${dockerUser} -p ${dockerPassword}"
-	      }
-        	sh "docker push gvenkat/webapp1"
-         }
-    }
-	    
-     stage('Deploy to Staging') {
-	
-	steps{
-	      //Deploy to K8s Cluster 
-              echo "Deploy to Staging Server"
-	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
-	      sshCommand remote: kops, command: "kubectl delete -f Maven-Java-Project/k8s-code/staging/app/deploy-webapp.yml"
-	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/staging/app/."
-	}		    
-    }
-	    
-     stage ('Integration-Test') {
-	
-	steps {
-             echo "Run Integration Test Cases"
-             unstash 'Source'
-            sh "mvn clean verify"
-        }
-    }
-	    
-    stage ('approve') {
-	steps {
-		echo "Approval State"
-                timeout(time: 7, unit: 'DAYS') {                    
-			input message: 'Do you want to deploy?', submitter: 'admin'
-		}
-	}
-     }
-	    
-     stage ('Prod-Deploy') {
-	
-	steps{
-              echo "Deploy to Production"
-	      //Deploy to Prod K8s Cluster
-	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
-	      sshCommand remote: kops, command: "kubectl delete -f Maven-Java-Project/k8s-code/prod/app/deploy-webapp.yml"
-	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/app/."
-	}
-	}
-
+  
     }
 }
