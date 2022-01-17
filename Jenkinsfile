@@ -91,7 +91,7 @@ pipeline {
          
         steps{
 
-    	      withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
+    	      withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
     		    sh "docker login -u ${dockerUser} -p ${dockerPassword}"
 	      }
         	sh "docker push sathish/webapp"
