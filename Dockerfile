@@ -1,6 +1,6 @@
 FROM centos
 
-LABEL Maintainer=RNS Email=bksathish89@gmail.com
+LABEL Maintainer=RNS Email=rns@rnstech.com
 RUN yum -y install java
 RUN java -version
 
