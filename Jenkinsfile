@@ -56,12 +56,12 @@ pipeline {
          
           steps{
 	       echo "Clean and Test"
-              //sh "mvn clean test"  
+              sh "mvn clean test"  
           }
           post{
               success{
 		      echo "Clean and Test"
-                  //junit 'target/surefire-reports/*.xml'
+                  junit 'target/surefire-reports/*.xml'
               }
           }
       }
@@ -70,13 +70,13 @@ pipeline {
         
           steps{
 		  echo "build code"
-	      //unstash 'Source'
-              //sh "mvn clean package"  
+	      unstash 'Source'
+              sh "mvn clean package"  
           }
           post{
               success{
 		      echo "archive artifact"
-                  //archiveArtifacts '**/*.war'
+                  archiveArtifacts '**/*.war'
               }
           }
       }
