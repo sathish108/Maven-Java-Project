@@ -117,15 +117,7 @@ pipeline {
         }
     }
 	    
-    stage ('approve') {
-	steps {
-		echo "Approval State"
-                timeout(time: 7, unit: 'DAYS') {                    
-			input message: 'Do you want to deploy?', submitter: 'admin'
-		}
-	}
-     }
-	    
+    
      stage ('Prod-Deploy') {
 	
 	steps{
