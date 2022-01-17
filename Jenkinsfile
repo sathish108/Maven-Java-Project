@@ -30,9 +30,9 @@ pipeline {
         stage('Tools-Setup') {
             steps {
 		    echo "Tools Setup"
-                sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
-                sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/sonarqube/sonar-install.yaml'
-                sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/docker/docker-install.yml'   
+                //sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
+                //sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/sonarqube/sonar-install.yaml'
+                //sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/docker/docker-install.yml'   
                      
                 //K8s Setup
                 //sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
@@ -56,12 +56,12 @@ pipeline {
          
           steps{
 	       echo "Clean and Test"
-              //sh "mvn clean test"  
+              sh "mvn clean test"  
           }
           post{
               success{
 		      echo "Clean and Test"
-                  //junit 'target/surefire-reports/*.xml'
+                  junit 'target/surefire-reports/*.xml'
               }
           }
       }
@@ -69,13 +69,11 @@ pipeline {
       stage('Build Code') {
         
           steps{
-		  echo "build code"
 	      unstash 'Source'
               sh "mvn clean package"  
           }
           post{
               success{
-		      echo "archive artifact"
                   archiveArtifacts '**/*.war'
               }
           }
@@ -86,16 +84,58 @@ pipeline {
          steps{
                   sh "docker build -t sathish108/webapp ."  
          }
-      }
-      stage('Publish Docker Image') {
+     }
+	    
+     stage('Publish Docker Image') {
          
-         steps{
+        steps{
 
     	      withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
     		    sh "docker login -u ${dockerUser} -p ${dockerPassword}"
-	       }
+	      }
         	sh "docker push sathish/webapp"
-              }   
-  
-     }
+         }
     }
+	    
+     stage('Deploy to Staging') {
+	
+	steps{
+	      //Deploy to K8s Cluster 
+              echo "Deploy to Staging Server"
+	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
+	      sshCommand remote: kops, command: "kubectl delete -f Maven-Java-Project/k8s-code/staging/app/deploy-webapp.yml"
+	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/staging/app/."
+	}		    
+    }
+	    
+     stage ('Integration-Test') {
+	
+	steps {
+             echo "Run Integration Test Cases"
+             unstash 'Source'
+            sh "mvn clean verify"
+        }
+    }
+	    
+    stage ('approve') {
+	steps {
+		echo "Approval State"
+                timeout(time: 7, unit: 'DAYS') {                    
+			input message: 'Do you want to deploy?', submitter: 'admin'
+		}
+	}
+     }
+	    
+     stage ('Prod-Deploy') {
+	
+	steps{
+              echo "Deploy to Production"
+	      //Deploy to Prod K8s Cluster
+	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
+	      sshCommand remote: kops, command: "kubectl delete -f Maven-Java-Project/k8s-code/prod/app/deploy-webapp.yml"
+	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/app/."
+	}
+	}
+
+    }
+}
