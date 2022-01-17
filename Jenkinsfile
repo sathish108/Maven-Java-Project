@@ -56,7 +56,7 @@ pipeline {
          
           steps{
 	       echo "Clean and Test"
-              sh "mvn clean test"  
+              //sh "mvn clean test"  
           }
           post{
               success{
@@ -89,13 +89,13 @@ pipeline {
       }
       stage('Publish Docker Image') {
          
-        steps{
+         steps{
 
     	      withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
     		    sh "docker login -u ${dockerUser} -p ${dockerPassword}"
-	      }
+	       }
         	sh "docker push sathish/webapp"
-         }   
+              }   
   
+     }
     }
-   }
