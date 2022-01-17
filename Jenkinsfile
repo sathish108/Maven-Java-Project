@@ -30,7 +30,7 @@ pipeline {
         stage('Tools-Setup') {
             steps {
 		    echo "Tools Setup"
-                //sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
+                sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
                 //sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/sonarqube/sonar-install.yaml'
                 //sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/docker/docker-install.yml'   
                      
@@ -70,13 +70,13 @@ pipeline {
         
           steps{
 		  echo "build code"
-	      //unstash 'Source'
-              //sh "mvn clean package"  
+	      unstash 'Source'
+              sh "mvn clean package"  
           }
           post{
               success{
 		      echo "archive artifact"
-                  //archiveArtifacts '**/*.war'
+                  archiveArtifacts '**/*.war'
               }
           }
       }
