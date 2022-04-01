@@ -1,6 +1,6 @@
 def ansible = [:]
          ansible.name = 'ansible'
-         ansible.host = '172.31.42.128'
+         ansible.host = '172.31.1.55'
          ansible.user = 'centos'
          ansible.password = 'Rnstech@123'
          ansible.allowAnyHosts = true
