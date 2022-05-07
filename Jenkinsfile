@@ -22,7 +22,7 @@ pipeline {
         stage('Prepare-Workspace') {
             steps {
                 // Get some code from a GitHub repository
-                git credentialsId: 'github-server-credentials', url: 'https://github.com/sathish108/Maven-Java-Project.git'    
+                git credentialsId: 'github_credentials', url: 'https://github.com/sathish108/Maven-Java-Project.git'    
 		        stash 'Source'
               }
             
@@ -52,7 +52,7 @@ pipeline {
            }
        }
 	    
-      stage('Unit Test Cases') {
+       stage('Unit Test Cases') {
          
           steps{
 	       echo "Clean and Test"
@@ -64,9 +64,9 @@ pipeline {
                   junit 'target/surefire-reports/*.xml'
               }
           }
-      }
+       }
 	    
-      stage('Build Code') {
+       stage('Build Code') {
         
           steps{
 	      unstash 'Source'
@@ -77,16 +77,16 @@ pipeline {
                   archiveArtifacts '**/*.war'
               }
           }
-      }
+       }
 	    
-      stage('Build Docker Image') {
+       stage('Build Docker Image') {
          
          steps{
                   sh "docker build -t sathish108/webapp ."  
          }
-     }
+        }
 	    
-     stage('Publish Docker Image') {
+       stage('Publish Docker Image') {
          
         steps{
 
@@ -95,38 +95,38 @@ pipeline {
 	      }
         	sh "docker push sathish108/webapp"
          }
-    }
+       }
 	    
-     stage('Deploy to Staging') {
+       stage('Deploy to Staging') {
 	
-	steps{
+	     steps{
 	      //Deploy to K8s Cluster 
               echo "Deploy to Staging Server"
-	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
-	      sshCommand remote: kops, command: "kubectl delete -f Maven-Java-Project/k8s-code/staging/app/deploy-webapp.yml"
-	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/staging/app/."
-	}		    
-    }
+	       sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
+	       sshCommand remote: kops, command: "kubectl delete -f Maven-Java-Project/k8s-code/staging/app/deploy-webapp.yml"
+	       sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/staging/app/."
+	     }		    
+       }
 	    
-     stage ('Integration-Test') {
+       stage ('Integration-Test') {
 	
-	steps {
+	        steps {
              echo "Run Integration Test Cases"
              unstash 'Source'
             sh "mvn clean verify"
+           }
         }
-    }
 	    
     
-     stage ('Prod-Deploy') {
+        stage ('Prod-Deploy') {
 	
-	steps{
+	        steps{
               echo "Deploy to Production"
 	      //Deploy to Prod K8s Cluster
 	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
 	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/app/."
-	}
-	}
+	       }
+	   }
 
     }
 }
