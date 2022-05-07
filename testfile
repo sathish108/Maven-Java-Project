@@ -1,11 +1,10 @@
-Pipeline {
+pipeline {
     agent { label 'buildserver' }
-
     tools {
         maven "maven3"
-    } 
+    }
     stages {
-        stage('clone workspace from scm') {
+        stage("clone src code from scm") {
             steps {
                 git credentialsId: 'github_credentials', url: 'https://github.com/sathish108/Maven-Java-Project'
             }

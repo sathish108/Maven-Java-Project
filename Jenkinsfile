@@ -1,6 +1,6 @@
 def ansible = [:]
          ansible.name = 'ansible'
-         ansible.host = '172.31.1.55'
+         ansible.host = '172.31.8.246'
          ansible.user = 'centos'
          ansible.password = 'Rnstech@123'
          ansible.allowAnyHosts = true
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 // Get some code from a GitHub repository
                 git credentialsId: 'github-server-credentials', url: 'https://github.com/sathish108/Maven-Java-Project.git'    
-		stash 'Source'
+		        stash 'Source'
               }
             
              }
@@ -36,21 +36,21 @@ pipeline {
                      
                 //K8s Setup
                 sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
-	        sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/staging/namespace/staging-ns.yml"
-	        sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/namespace/prod-ns.yml"
+	            sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/staging/namespace/staging-ns.yml"
+	            sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/namespace/prod-ns.yml"
             }            
         }
 	    
-	stage('SonarQube analysis') {
+    	stage('SonarQube analysis') {
          
-          steps{
+            steps{
                 echo "Sonar Scanner"
                   sh "mvn clean compile"
                withSonarQubeEnv('sonar-7') { 
                  sh "mvn sonar:sonar "
                 }                     
-          }
-      }
+           }
+       }
 	    
       stage('Unit Test Cases') {
          
