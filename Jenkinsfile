@@ -11,7 +11,7 @@ def kops = [:]
          kops.password = 'Rnstech@123'
          kops.allowAnyHosts = true
 pipeline {
-    agent { label 'buildserver' }
+    agent { label 'buildserver'}
 
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
