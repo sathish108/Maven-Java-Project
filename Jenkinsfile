@@ -11,7 +11,7 @@ def kops = [:]
          kops.password = 'Rnstech@123'
          kops.allowAnyHosts = true
 pipeline {
-    agent { label 'buildserver'}
+    agent { label 'buildserver' }
 
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
@@ -24,12 +24,12 @@ pipeline {
                 // Get some code from a GitHub repository
                 git credentialsId: 'github_credentials', url: 'https://github.com/sathish108/Maven-Java-Project'
 		        stash 'Source'
-              }
+            }
             
-             }
+        }
         stage('Tools-Setup') {
             steps {
-		    echo "Tools Setup"
+		         echo "Tools Setup"
                  sshCommand remote: ansible, command: 'cd Maven-Java-Project; git pull'
                  sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/sonarqube/sonar-install.yaml'
                  sshCommand remote: ansible, command: 'cd Maven-Java-Project; ansible-playbook -i hosts tools/docker/docker-install.yml'   
@@ -55,12 +55,12 @@ pipeline {
        stage('Unit Test Cases') {
          
           steps{
-	       echo "Clean and Test"
+	          echo "Clean and Test"
               sh "mvn clean test"  
           }
           post{
               success{
-		      echo "Clean and Test"
+		        echo "Clean and Test"
                   junit 'target/surefire-reports/*.xml'
               }
           }
