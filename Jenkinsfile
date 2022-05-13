@@ -22,7 +22,7 @@ pipeline {
         stage('Prepare-Workspace') {
             steps {
                 // Get some code from a GitHub repository
-                git credentialsId: 'github_credentials', url: 'https://github.com/sathish108/Maven-Java-Project'
+                git credentialsId: 'slaveauth', url: 'https://github.com/sathish108/Maven-Java-Project'
 		        stash 'Source'
             }
             
@@ -82,7 +82,7 @@ pipeline {
        stage('Build Docker Image') {
          
          steps{
-                  sh "docker build -t sathish108/webapp ."  
+            sh "docker build -t sathish108/webapp ."  
          }
         }
 	    
