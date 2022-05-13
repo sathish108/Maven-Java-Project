@@ -43,12 +43,11 @@ pipeline {
 	    
     	stage('SonarQube analysis') {
          
-            steps{
-                echo "Sonar Scanner"
-                sh "mvn clean compile"
+                steps{
+                   echo "Sonar Scanner"
+                   sh "mvn clean compile"
                 }                     
-           }
-       }
+        }
 	    
        stage('Unit Test Cases') {
          
