@@ -69,7 +69,7 @@ pipeline {
        stage('Build Code') {
         
           steps{
-	      unstash 'Source'
+	          unstash 'Source'
               sh "mvn clean package"  
           }
           post{
@@ -80,21 +80,19 @@ pipeline {
        }
 	    
        stage('Build Docker Image') {
-         
-         steps{
+          steps{
             sh "docker build -t sathish108/webapp ."  
-         }
+          }
         }
 	    
        stage('Publish Docker Image') {
-         
-        steps{
+           steps{
 
-    	      withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
+    	       withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
     		    sh "docker login -u ${dockerUser} -p ${dockerPassword}"
-	      }
-        	sh "docker push sathish108/webapp"
-         }
+	           }
+        	   sh "docker push sathish108/webapp"
+           }
        }
 	    
        stage('Deploy to Staging') {
@@ -120,13 +118,13 @@ pipeline {
     
         stage ('Prod-Deploy') {
 	
-	        steps{
-              echo "Deploy to Production"
-	      //Deploy to Prod K8s Cluster
-	      sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
-	      sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/app/."
-	       }
-	   }
+	        steps {
+                 echo "Deploy to Production"
+	             //Deploy to Prod K8s Cluster
+	            sshCommand remote: kops, command: "cd Maven-Java-Project; git pull"
+	            sshCommand remote: kops, command: "kubectl apply -f Maven-Java-Project/k8s-code/prod/app/."
+	        }
+	    }
 
     }
 }
