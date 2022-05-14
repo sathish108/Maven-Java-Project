@@ -1,4 +1,4 @@
-FROM centos
+FROM centos:7
 
 LABEL Maintainer=RNS Email=bksathish89@gmail.com
 RUN java -version
