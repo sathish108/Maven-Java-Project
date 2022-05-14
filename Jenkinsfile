@@ -48,7 +48,8 @@ pipeline {
                    sh "mvn clean compile"
                    withSonarQubeEnv('sonar-7') { 
                    sh "mvn sonar:sonar "
-                }                     
+                  } 
+                }                    
         }
 	    
        stage('Unit Test Cases') {
