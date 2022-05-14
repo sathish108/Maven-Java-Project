@@ -56,12 +56,12 @@ pipeline {
          
           steps{
 	          echo "Clean and Test"
-              sh "mvn clean test"  
+              //sh "mvn clean test"  
           }
           post{
               success{
 		        echo "Clean and Test"
-                junit 'target/surefire-reports/*.xml'
+                //junit 'target/surefire-reports/*.xml'
               }
           }
        }
@@ -70,7 +70,7 @@ pipeline {
         
           steps{
 	          unstash 'Source'
-              sh "mvn clean package"  
+              //sh "mvn clean package"  
           }
           post{
               success{
