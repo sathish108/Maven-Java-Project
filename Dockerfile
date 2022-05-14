@@ -9,8 +9,8 @@ RUN java -version
 
 WORKDIR /opt
 RUN curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.62/bin/apache-tomcat-9.0.62.tar.gz
-RUN tar -xzvf apache-tomcat-8.5.73.tar.gz /opt/
-RUN cp -R /opt/apache-tomcat-8.5.73/ /opt/tomcat
+RUN tar -xzvf apache-tomcat-9.0.62.tar.gz /opt/
+RUN cp -R /opt/apache-tomcat-9.0.62/ /opt/tomcat
 
 WORKDIR /opt/tomcat/webapps
 COPY target/*.war /opt/tomcat/webapps/webapp.war
