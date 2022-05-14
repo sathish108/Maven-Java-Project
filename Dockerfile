@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos
 
 LABEL Maintainer=RNS Email=bksathish89@gmail.com
 RUN yum update -y
