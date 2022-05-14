@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
     - name: webapp
-      image: sathish108/webapp:latest
+      image: sathish108/webapp1:latest
       imagePullPolicy: Always
       ports:
         - containerPort: 8080
