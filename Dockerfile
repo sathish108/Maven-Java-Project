@@ -8,7 +8,7 @@ RUN java -version
 #RUN mkdir /opt/tomcat/
 
 WORKDIR /opt
-RUN curl -O https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.73/bin/apache-tomcat-8.5.73.tar.gz
+RUN curl -O https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.78/bin/apache-tomcat-8.5.78.tar.gz
 RUN tar -xzvf apache-tomcat-8.5.73.tar.gz /opt/
 RUN cp -R /opt/apache-tomcat-8.5.73/ /opt/tomcat
 
