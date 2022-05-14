@@ -1,7 +1,7 @@
 FROM centos
 
 LABEL Maintainer=RNS Email=rns@rnstech.com
-RUN yum -y install java
+RUN sudo yum -y install java
 RUN java -version
 
 #RUN mkdir /opt/tomcat/
