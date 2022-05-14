@@ -82,7 +82,7 @@ pipeline {
        stage('Build Docker Image') {
           steps{
               echo "image build"
-            sh "docker build -t sathish108/webapp1 ."  
+            sh "docker build -t sathish108/webapp ."  
           }
         }
 	    
@@ -92,7 +92,7 @@ pipeline {
     	       withCredentials([usernamePassword(credentialsId: 'dockerhub cred', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
     		    sh "docker login -u ${dockerUser} -p ${dockerPassword}"
 	           }
-        	   sh "docker push sathish108/webapp1"
+        	   sh "docker push sathish108/webapp"
            }
        }
 	    
